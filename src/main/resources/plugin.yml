@@ -1,0 +1,4 @@
+name: MongoTemplate
+version: @version@
+main: chiharu.hagihara.mongotemplate.MongoTemplate
+api-version: 1.16
