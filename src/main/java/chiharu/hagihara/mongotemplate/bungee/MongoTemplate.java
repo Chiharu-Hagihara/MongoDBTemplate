@@ -1,8 +1,8 @@
-package chiharu.hagihara.mongotemplate;
+package chiharu.hagihara.mongotemplate.bungee;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.plugin.Plugin;
 
-public final class MongoTemplate extends JavaPlugin {
+public final class MongoTemplate extends Plugin {
 
     @Override
     public void onEnable() {
