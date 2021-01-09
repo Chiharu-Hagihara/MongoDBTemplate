@@ -2,7 +2,6 @@ package chiharu.hagihara.mongotemplate.paper;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.MongoException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -11,7 +10,7 @@ public class MongoDBFunc {
 
     /**
      * Created by Chiharu-Hagihara
-     * Reference by takatronix:MySQLManager
+     * Reference by takatronix:MySQLFunc
      */
 
     private JavaPlugin plugin;
@@ -37,10 +36,8 @@ public class MongoDBFunc {
             MongoClientURI uri = new MongoClientURI("mongodb://" + USER + ":" + PASS + "@" + HOST + ":" + PORT + "/?authSource=" + DATABASE + customUri);
             this.con = new MongoClient(uri);
             return this.con;
-        } catch (MongoException var2) {
+        } catch (Exception var2) {
             plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server, error code: " + var2);
-        } catch (Exception var3) {
-            plugin.getLogger().log(Level.SEVERE, "Error in line 34.");
         }
         return this.con;
     }

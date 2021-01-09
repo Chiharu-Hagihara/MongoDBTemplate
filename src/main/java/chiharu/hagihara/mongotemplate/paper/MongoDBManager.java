@@ -2,9 +2,7 @@ package chiharu.hagihara.mongotemplate.paper;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +18,6 @@ public class MongoDBManager implements AutoCloseable {
     public String PASS;
     public int PORT;
     public String DATABASE;
-    public String customUri;
     private boolean connected = false;
     private String conURI;
     private MongoCollection<Document> coll;
@@ -43,7 +40,7 @@ public class MongoDBManager implements AutoCloseable {
         this.connected = Connect(conURI);
 
         if(!this.connected) {
-            plugin.getLogger().info("Unable to establish a MySQL connection.");
+            plugin.getLogger().info("Unable to establish a MongoDB connection.");
         }
     }
 
@@ -72,14 +69,14 @@ public class MongoDBManager implements AutoCloseable {
         this.MongoDB = new MongoDBFunc(HOST, USER, PASS, PORT, DATABASE);
         this.con = this.MongoDB.open();
         if(this.con == null){
-            plugin.getLogger().info("failed to open MYSQL");
+            plugin.getLogger().info("failed to open MongoDB");
             return false;
         }
 
         try {
             this.connected = true;
             this.plugin.getLogger().info("Connected to the database.");
-        } catch (MongoException var6) {
+        } catch (Exception var6) {
             this.connected = false;
             this.plugin.getLogger().info("Could not connect to the database.");
         }
@@ -122,22 +119,14 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     public List<Document> queryFind(String key, String value) {
         BasicDBObject query = new BasicDBObject(key, value);
-        MongoCursor<Document> cursor = coll.find(query).cursor();
-        List<Document> result = new ArrayList<>();
-        try {
-            while(cursor.hasNext()) {
-                result.add(cursor.next());
-            }
-        }catch(Exception e) {
-        }
-        return result;
+        return coll.find(query).into(new ArrayList<>());
     }
 
     ////////////////////////////////
     //       Count Query
     ////////////////////////////////
     public long queryCount() {
-        return coll.countDocuments();
+        return coll.count();
     }
 
     ////////////////////////////////
@@ -150,7 +139,7 @@ public class MongoDBManager implements AutoCloseable {
             this.con.close();
             this.MongoDB.close(this.con);
 
-        } catch (MongoException var4) {
+        } catch (Exception var4) {
         }
 
     }

@@ -14,7 +14,8 @@ public final class MongoTemplate extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
-
+        saveDefaultConfig();
+        this.getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -24,8 +25,18 @@ public final class MongoTemplate extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onLogin(PlayerJoinEvent e) {
-        LoginThread thread = new LoginThread(this, e.getPlayer());
-        thread.start();
+//        LoginThread thread = new LoginThread(this, e.getPlayer());
+//        thread.start();
+        Player player = e.getPlayer();
+        LocalDateTime time = LocalDateTime.now();
+        MongoDBManager mongo = new MongoDBManager(this, "test");
+        mongo.queryInsertOne(
+                "{'mcid':'" + player.getName() + "', " +
+                        "'uuid':'" + player.getUniqueId() + "', " +
+                        "'ip':'" + Objects.requireNonNull(player.getAddress()).getHostName() + "', " +
+                        "'date':'" + time + "'}"
+        );
+        mongo.close();
     }
 }
 
@@ -33,19 +44,20 @@ class LoginThread extends Thread {
     private MongoTemplate plugin;
     private Player player;
     private LocalDateTime time = LocalDateTime.now();
+
     public LoginThread(MongoTemplate plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
     }
 
     public void run() {
-        try (MongoDBManager mongo = new MongoDBManager(plugin, "test")) {
-            mongo.queryInsertOne(
-                    "{'mcid':'" + player.getName() +"', " +
-                            "'uuid':'" + player.getUniqueId() + "', " +
-                            "'ip':'" + Objects.requireNonNull(player.getAddress()).getHostName() + "', " +
-                            "'date':'" + time + "'}"
-            );
-        }
+        MongoDBManager mongo = new MongoDBManager(plugin, "test");
+        mongo.queryInsertOne(
+                "{'mcid':'" + player.getName() + "', " +
+                        "'uuid':'" + player.getUniqueId() + "', " +
+                        "'ip':'" + Objects.requireNonNull(player.getAddress()).getHostName() + "', " +
+                        "'date':'" + time + "'}"
+        );
+        mongo.close();
     }
 }
