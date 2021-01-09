@@ -92,7 +92,6 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     public void queryInsertOne(String doc) {
         coll.insertOne(Document.parse(doc));
-        plugin.getLogger().info("Insert: " + doc);
     }
 
     ////////////////////////////////
