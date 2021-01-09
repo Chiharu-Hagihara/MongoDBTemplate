@@ -18,18 +18,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        //        LoginThread thread = new LoginThread(this, e.getPlayer());
-        //        thread.start();
-        Player player = e.getPlayer();
-        LocalDateTime time = LocalDateTime.now();
-        MongoDBManager mongo = new MongoDBManager(plugin, "test");
-        mongo.queryInsertOne(
-                "{'mcid':'" + player.getName() + "', " +
-                        "'uuid':'" + player.getUniqueId() + "', " +
-                        "'ip':'" + Objects.requireNonNull(player.getAddress()).getHostName() + "', " +
-                        "'date':'" + time + "'}"
-        );
-        mongo.close();
+        LoginThread thread = new LoginThread(plugin, e.getPlayer());
+        thread.start();
     }
 }
 
