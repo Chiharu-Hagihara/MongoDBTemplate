@@ -18,8 +18,8 @@ public class MongoDBManager implements AutoCloseable {
     public String PASS;
     public int PORT;
     public String DATABASE;
+    public String CUSTOM;
     private boolean connected = false;
-    private String conURI;
     private MongoCollection<Document> coll;
     private MongoClient con = null;
     private MongoDBFunc MongoDB;
@@ -33,14 +33,16 @@ public class MongoDBManager implements AutoCloseable {
     //      Constructor
     ////////////////////////////////
     public MongoDBManager(JavaPlugin plugin, String coll) {
-        loadConfig();
         this.plugin = plugin;
-        this.coll = con.getDatabase(DATABASE).getCollection(coll);
+
+        loadConfig();
+
         this.connected = false;
-        this.connected = Connect(conURI);
+        this.connected = Connect();
+        this.coll = con.getDatabase(DATABASE).getCollection(coll);
 
         if(!this.connected) {
-            plugin.getLogger().info("Unable to establish a MongoDB connection.");
+            this.plugin.getLogger().info("Unable to establish a MongoDB connection.");
         }
     }
 
@@ -48,13 +50,14 @@ public class MongoDBManager implements AutoCloseable {
     //       Load YAML
     /////////////////////////////////
     public void loadConfig(){
-        plugin.getLogger().info("MYSQL Config loading");
+        plugin.getLogger().info("MongoDB Config loading");
 
         plugin.reloadConfig();
         HOST = plugin.getConfig().getString("mongo.host");
         USER = plugin.getConfig().getString("mongo.user");
         PASS = plugin.getConfig().getString("mongo.pass");
         PORT = plugin.getConfig().getInt("mongo.port");
+        CUSTOM = plugin.getConfig().getString("mongo.uri");
         DATABASE = plugin.getConfig().getString("mongo.db");
 
         plugin.getLogger().info("Config loaded");
@@ -64,9 +67,8 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     //       Connect
     ////////////////////////////////
-    public Boolean Connect(String conURI) {
-        this.conURI = conURI;
-        this.MongoDB = new MongoDBFunc(HOST, USER, PASS, PORT, DATABASE);
+    public Boolean Connect() {
+        this.MongoDB = new MongoDBFunc(HOST, USER, PASS, PORT, DATABASE, CUSTOM);
         this.con = this.MongoDB.open();
         if(this.con == null){
             plugin.getLogger().info("failed to open MongoDB");

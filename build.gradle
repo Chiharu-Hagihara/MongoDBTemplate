@@ -33,3 +33,11 @@ processResources {
         filter ReplaceTokens, tokens: [version: version]
     }
 }
+
+jar {
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

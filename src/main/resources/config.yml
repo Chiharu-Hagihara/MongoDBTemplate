@@ -5,4 +5,4 @@ mongo:
   port: 27017
   db: template
   # You can set the uri as you like.
-  uri: ""
+  uri: "?authSource=admin"
