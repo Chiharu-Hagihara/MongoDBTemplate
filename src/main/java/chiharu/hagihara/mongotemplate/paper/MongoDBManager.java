@@ -127,7 +127,7 @@ public class MongoDBManager implements AutoCloseable {
     //       Count Query
     ////////////////////////////////
     public long queryCount() {
-        return coll.count();
+        return coll.countDocuments();
     }
 
     ////////////////////////////////
