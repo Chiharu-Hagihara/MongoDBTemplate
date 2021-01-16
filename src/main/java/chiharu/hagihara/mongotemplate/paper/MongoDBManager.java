@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MongoDBManager implements AutoCloseable {
 
@@ -143,5 +144,27 @@ public class MongoDBManager implements AutoCloseable {
         } catch (Exception var4) {
         }
 
+    }
+
+    ////////////////////////////////
+    //       Setup BlockingQueue
+    ////////////////////////////////
+    static LinkedBlockingQueue<Document> blockingQueue = new LinkedBlockingQueue<>();
+
+    public static void setupBlockingQueue(JavaPlugin plugin, String conName) {
+        new Thread(() -> {
+            MongoDBManager mongo = new MongoDBManager(plugin, conName);
+            try {
+                while (true) {
+                    Document take = blockingQueue.take();
+                    mongo.queryInsertOne(take);
+                }
+            }catch (Exception e) {
+            }
+        }).start();
+    }
+
+    public static void executeQuery(Document query) {
+        blockingQueue.add(query);
     }
 }
