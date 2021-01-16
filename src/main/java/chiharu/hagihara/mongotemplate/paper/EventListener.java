@@ -21,7 +21,7 @@ public class EventListener implements Listener {
         new Thread(() -> {
             Player player = e.getPlayer();
             LocalDateTime time = LocalDateTime.now();
-            MongoDBManager mongo = new MongoDBManager(plugin, "test");
+            MongoDBManager mongo = new MongoDBManager(plugin, "LoginListener");
             mongo.queryInsertOne(
                     "{'mcid':'" + player.getName() + "', " +
                             "'uuid':'" + player.getUniqueId() + "', " +
