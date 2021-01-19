@@ -164,7 +164,7 @@ public class MongoDBManager implements AutoCloseable {
         }).start();
     }
 
-    public static void executeQuery(String query) {
+    public static void executeQueue(String query) {
         blockingQueue.add(query);
     }
 }
