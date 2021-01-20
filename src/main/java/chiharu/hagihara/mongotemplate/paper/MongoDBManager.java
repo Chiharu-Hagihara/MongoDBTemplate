@@ -143,9 +143,9 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     static LinkedBlockingQueue<String> blockingQueue = new LinkedBlockingQueue<>();
 
-    public static void setupBlockingQueue(JavaPlugin plugin, String conName) {
+    public static void setupBlockingQueue(JavaPlugin plugin, String coll) {
         new Thread(() -> {
-            MongoDBManager mongo = new MongoDBManager(plugin, conName);
+            MongoDBManager mongo = new MongoDBManager(plugin, coll);
             try {
                 while (true) {
                     String take = blockingQueue.take();
@@ -156,7 +156,7 @@ public class MongoDBManager implements AutoCloseable {
         }).start();
     }
 
-    public static void executeQuery(String query) {
+    public static void executeQueue(String query) {
         blockingQueue.add(query);
     }
 }
