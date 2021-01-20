@@ -1,6 +1,5 @@
 package chiharu.hagihara.mongotemplate.paper;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -111,9 +110,8 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     //       Find Query
     ////////////////////////////////
-    public List<Document> queryFind(String key, String value) {
-        BasicDBObject query = new BasicDBObject(key, value);
-        return coll.find(query).into(new ArrayList<>());
+    public List<Document> queryFind(String filter) {
+        return coll.find(Document.parse(filter)).into(new ArrayList<>());
     }
 
     ////////////////////////////////
