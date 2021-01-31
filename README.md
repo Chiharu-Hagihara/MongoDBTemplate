@@ -1,2 +1,0 @@
-# MongoDBTemplate
-MongoDBをMinecraftで使うためのTemplate
