@@ -26,6 +26,9 @@ dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
     compile 'org.mongodb:mongo-java-driver:3.12.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.1'
 }
 
 processResources {
