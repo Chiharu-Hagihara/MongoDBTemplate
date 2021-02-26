@@ -1,5 +1,6 @@
 package chiharu.hagihara.mongotemplate.paper;
 
+import org.bson.Document;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,12 +23,13 @@ public class EventListener implements Listener {
             Player player = e.getPlayer();
             LocalDateTime time = LocalDateTime.now();
             MongoDBManager mongo = new MongoDBManager(plugin, "LoginListener");
-            mongo.queryInsertOne(
-                    "{'mcid':'" + player.getName() + "', " +
-                            "'uuid':'" + player.getUniqueId() + "', " +
-                            "'ip':'" + Objects.requireNonNull(player.getAddress()).getHostName() + "', " +
-                            "'date':'" + time + "'}"
-            );
+            Document doc = new Document();
+
+            doc.append("mcid", player.getName());
+            doc.append("uuid", player.getUniqueId().toString());
+            doc.append("ip", Objects.requireNonNull(player.getAddress()).getHostName());
+            doc.append("date", time.toString());
+            mongo.queryInsertOne(doc);
             mongo.close();
         }
         ).start();

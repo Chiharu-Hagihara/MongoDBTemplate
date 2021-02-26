@@ -89,36 +89,38 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     //       InsertOne Query
     ////////////////////////////////
-    public void queryInsertOne(String doc) {
-        coll.insertOne(Document.parse(doc));
+    public void queryInsertOne(Document doc) {
+        coll.insertOne(doc);
     }
 
     ////////////////////////////////
     //       UpdateOne Query
     ////////////////////////////////
-    public void queryUpdateOne(String filter, String update) {
-        coll.updateOne(Document.parse(filter), Document.parse(update));
+    public void queryUpdateOne(Document filter, Document update) {
+        Document updateSet = new Document();
+        updateSet.append("$set", update);
+        coll.updateOne(filter, updateSet);
     }
 
     ////////////////////////////////
     //       DeleteOne Query
     ////////////////////////////////
-    public void queryDelete(String filter) {
-        coll.deleteOne(Document.parse(filter));
+    public void queryDelete(Document filter) {
+        coll.deleteOne(filter);
     }
 
     ////////////////////////////////
     //       Find Query
     ////////////////////////////////
-    public List<Document> queryFind(String filter) {
-        return coll.find(Document.parse(filter)).into(new ArrayList<>());
+    public List<Document> queryFind(Document filter) {
+        return coll.find(filter).into(new ArrayList<>());
     }
 
     ////////////////////////////////
     //       Count Query
     ////////////////////////////////
-    public long queryCount(String doc) {
-        return coll.countDocuments(Document.parse(doc));
+    public long queryCount(Document filter) {
+        return coll.countDocuments(filter);
     }
 
     ////////////////////////////////
@@ -139,14 +141,14 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     //       Setup BlockingQueue
     ////////////////////////////////
-    static LinkedBlockingQueue<String> blockingQueue = new LinkedBlockingQueue<>();
+    static LinkedBlockingQueue<Document> blockingQueue = new LinkedBlockingQueue<>();
 
     public static void setupBlockingQueue(JavaPlugin plugin, String coll) {
         new Thread(() -> {
             MongoDBManager mongo = new MongoDBManager(plugin, coll);
             try {
                 while (true) {
-                    String take = blockingQueue.take();
+                    Document take = blockingQueue.take();
                     mongo.queryInsertOne(take);
                 }
             }catch (Exception e) {
@@ -154,7 +156,7 @@ public class MongoDBManager implements AutoCloseable {
         }).start();
     }
 
-    public static void executeQueue(String query) {
+    public static void executeQueue(Document query) {
         blockingQueue.add(query);
     }
 }
