@@ -96,9 +96,9 @@ public class MongoDBManager implements AutoCloseable {
     ////////////////////////////////
     //       UpdateOne Query
     ////////////////////////////////
-    public void queryUpdateOne(Document filter, Document update) {
+    public void queryUpdateOne(Document filter, String updateType, Document update) {
         Document updateSet = new Document();
-        updateSet.append("$set", update);
+        updateSet.append(updateType, update);
         coll.updateOne(filter, updateSet);
     }
 
