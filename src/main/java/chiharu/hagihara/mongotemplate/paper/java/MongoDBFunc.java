@@ -38,7 +38,7 @@ public class MongoDBFunc {
             this.con = new MongoClient(uri);
             return this.con;
         } catch (Exception var2) {
-            plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server, error code: " + var2);
+            plugin.getLogger().log(Level.SEVERE, "Could not connect to MongoDB server, error code: " + var2);
         }
         return this.con;
     }
