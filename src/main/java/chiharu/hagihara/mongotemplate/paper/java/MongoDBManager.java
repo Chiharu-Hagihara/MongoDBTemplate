@@ -1,4 +1,4 @@
-package chiharu.hagihara.mongotemplate.paper;
+package chiharu.hagihara.mongotemplate.paper.java;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
