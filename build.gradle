@@ -1,8 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
+apply plugin: 'kotlin'
 
 group = 'chiharu.hagihara'
 version = '1.0-SNAPSHOT'
@@ -23,12 +22,10 @@ repositories {
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:1.4.30"
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.15-SNAPSHOT'
-    compile 'org.mongodb:mongo-java-driver:3.12.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.1'
+    compile 'org.mongodb:mongo-java-driver:3.12.8'
 }
 
 processResources {
@@ -37,10 +34,21 @@ processResources {
     }
 }
 
-jar {
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/java'
+}
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30"
     }
 }
